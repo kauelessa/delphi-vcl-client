@@ -15,7 +15,12 @@ uses
   Infra.Http in '..\src\Infra\Infra.Http.pas',
   Test.LogHttp in 'Test.LogHttp.pas',
   Test.Config in 'Test.Config.pas',
-  Test.Http in 'Test.Http.pas';
+  Test.Http in 'Test.Http.pas',
+  Infra.Json in '..\src\Infra\Infra.Json.pas',
+  Api.Base in '..\src\Api\Api.Base.pas',
+  Test.Fakes in 'Test.Fakes.pas',
+  Test.Json in 'Test.Json.pas',
+  Test.ApiBase in 'Test.ApiBase.pas';
 
 var
   LRunner: ITestRunner;
