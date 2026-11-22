@@ -20,7 +20,15 @@ uses
   Api.Base in '..\src\Api\Api.Base.pas',
   Test.Fakes in 'Test.Fakes.pas',
   Test.Json in 'Test.Json.pas',
-  Test.ApiBase in 'Test.ApiBase.pas';
+  Test.ApiBase in 'Test.ApiBase.pas',
+  Model.Sessao in '..\src\Models\Model.Sessao.pas',
+  Infra.Dpapi in '..\src\Infra\Infra.Dpapi.pas',
+  Infra.Preferencias in '..\src\Infra\Infra.Preferencias.pas',
+  Api.Auth in '..\src\Api\Api.Auth.pas',
+  Api.Health in '..\src\Api\Api.Health.pas',
+  Service.Sessao in '..\src\Services\Service.Sessao.pas',
+  Test.Dpapi in 'Test.Dpapi.pas',
+  Test.Sessao in 'Test.Sessao.pas';
 
 var
   LRunner: ITestRunner;
