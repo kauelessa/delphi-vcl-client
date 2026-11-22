@@ -2,7 +2,7 @@
 
 Cliente desktop em **Delphi (VCL)** com **DevExpress** que consome a **[delphi-horse-api](https://github.com/kauelessa/delphi-horse-api)**: login com JWT, cadastro de clientes e produtos e emissão de pedidos com baixa de estoque.
 
-> Faz parte do meu portfólio, junto com a API (back-end Horse + Firebird) e o [delphi-emissor-nfe](https://github.com/kauelessa/delphi-emissor-nfe): os pedidos criados aqui podem ser **faturados como NF-e** no emissor, que importa o pedido da API e completa os dados fiscais.
+> Faz parte do meu portfólio, junto com a API (back-end Horse + Firebird) e o [delphi-emissor-nfe](https://github.com/kauelessa/delphi-emissor-nfe): os pedidos criados aqui podem ser **faturados como NF-e** no emissor, que importa o pedido da API e completa os dados fiscais. Os pedidos feitos na rua pelo app FireMonkey **delphi-fmx-forca-vendas** (em construção) também aparecem aqui, com vendedor, local e assinatura do cliente.
 
 ![Lista de pedidos](docs/screenshots/pedidos.png)
 
@@ -31,11 +31,11 @@ Cliente desktop em **Delphi (VCL)** com **DevExpress** que consome a **[delphi-h
 | Login | Escolha do servidor (perfil), "lembrar usuário" e "lembrar senha" | `POST /auth/login` |
 | Barra de status | Indicador de API online/offline, consultado a cada 30 s | `GET /health` |
 | Clientes | Lista paginada com busca por nome ou CPF/CNPJ, cadastro, edição e inativação | `GET/POST/PUT/DELETE /clientes` |
-| Produtos | Lista paginada com busca pela descrição, cadastro, edição (inclusive estoque) e inativação | `GET/POST/PUT/DELETE /produtos` |
-| Pedidos | Lista paginada com filtro por cliente, detalhe com itens e cancelamento (devolve estoque) | `GET /pedidos`, `GET /pedidos/:id`, `PATCH /pedidos/:id/cancelar` |
+| Produtos | Lista paginada com busca pela descrição, cadastro, edição (inclusive estoque e código de barras EAN/GTIN, usado na leitura pela câmera do app) e inativação | `GET/POST/PUT/DELETE /produtos` |
+| Pedidos | Lista paginada com filtro por cliente, origem (API ou App), vendedor e NF-e que faturou o pedido; detalhe com itens, observação, local da venda ("Ver no mapa" abre o OpenStreetMap) e assinatura do cliente; cancelamento (devolve estoque) | `GET /pedidos`, `GET /pedidos/:id`, `GET /pedidos/:id/assinatura`, `PATCH /pedidos/:id/cancelar` |
 | Novo pedido | Escolha do cliente e dos produtos, total ao vivo, rascunho automático e envio (baixa estoque) | `POST /pedidos` |
 
-Quando o token expira (ele vale 60 minutos e a API não tem renovação), o sistema pede a senha de novo e repete a chamada que estava em andamento, sem perder o que estava na tela.
+Quando o token expira (ele vale 60 minutos; a renovação por refresh token da API é usada pelo app, não por este cliente), o sistema pede a senha de novo e repete a chamada que estava em andamento, sem perder o que estava na tela.
 
 | | |
 |---|---|
@@ -104,6 +104,7 @@ Abra `tests/DelphiVclClientTests.dpr` (DUnitX, que vem com o RAD Studio) e execu
 - [x] Janela principal com o visual em cartões e indicador de API online
 - [x] Relogin automático quando o token expira
 - [x] Prints e documentação
+- [x] Campos do app Força de Vendas: código de barras, origem, vendedor, NF-e, local e assinatura
 
 ## 👤 Autor
 
