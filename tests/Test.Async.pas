@@ -17,6 +17,8 @@ type
     procedure ExecutarAsync_ErroChegaNaThreadPrincipal;
     [Test]
     procedure ExecutarAsync_AcaoRodaForaDaThreadPrincipal;
+    [Test]
+    procedure SinalVida_NasceAtivoEDesativa;
   end;
 
 implementation
@@ -108,6 +110,16 @@ begin
     end);
   AguardarFila(LTerminou);
   Assert.AreNotEqual(MainThreadID, LThreadAcao);
+end;
+
+procedure TTestAsync.SinalVida_NasceAtivoEDesativa;
+var
+  LSinal: ISinalVida;
+begin
+  LSinal := NovoSinalVida;
+  Assert.IsTrue(LSinal.Ativo);
+  LSinal.Desativar;
+  Assert.IsFalse(LSinal.Ativo);
 end;
 
 initialization

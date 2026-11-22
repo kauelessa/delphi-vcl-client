@@ -48,6 +48,12 @@ type
     procedure Service_ProdutoSemDescricao_LevantaValidacao;
     [Test]
     procedure Pagina_TotalPaginas;
+    [Test]
+    [TestCase('CPF', '52998224725,529.982.247-25')]
+    [TestCase('CNPJ', '11222333000181,11.222.333/0001-81')]
+    [TestCase('CNPJ alfanumerico', '12ABC34501DE35,12.ABC.345/01DE-35')]
+    [TestCase('Tamanho desconhecido', '123,123')]
+    procedure Documento_FormatadoParaExibir(const ADocumento, AEsperado: string);
   end;
 
 implementation
@@ -278,6 +284,19 @@ begin
     Assert.AreEqual(3, LPagina.TotalPaginas);
   finally
     LPagina.Free;
+  end;
+end;
+
+procedure TTestClienteProduto.Documento_FormatadoParaExibir(const ADocumento, AEsperado: string);
+var
+  LCliente: TCliente;
+begin
+  LCliente := TCliente.Create;
+  try
+    LCliente.Documento := ADocumento;
+    Assert.AreEqual(AEsperado, LCliente.DocumentoFormatado);
+  finally
+    LCliente.Free;
   end;
 end;
 

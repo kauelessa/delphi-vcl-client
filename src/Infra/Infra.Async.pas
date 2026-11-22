@@ -15,12 +15,53 @@ interface
 uses
   System.SysUtils;
 
+type
+  // a tela cria um, desativa no Destroy, e os callbacks conferem antes de mexer nela:
+  // se o usuário trocou de aba no meio da chamada, o retorno é simplesmente ignorado
+  ISinalVida = interface
+    ['{D41B7E28-3A6F-4C95-B8E0-5F2C9A1D7E63}']
+    function Ativo: Boolean;
+    procedure Desativar;
+  end;
+
 procedure ExecutarAsync(const AAcao: TProc; const ASucesso: TProc; const AErro: TProc<Exception>);
+function NovoSinalVida: ISinalVida;
 
 implementation
 
 uses
   System.Classes, System.Threading;
+
+type
+  TSinalVida = class(TInterfacedObject, ISinalVida)
+  private
+    FAtivo: Boolean;
+  public
+    constructor Create;
+    function Ativo: Boolean;
+    procedure Desativar;
+  end;
+
+constructor TSinalVida.Create;
+begin
+  inherited Create;
+  FAtivo := True;
+end;
+
+function TSinalVida.Ativo: Boolean;
+begin
+  Result := FAtivo;
+end;
+
+procedure TSinalVida.Desativar;
+begin
+  FAtivo := False;
+end;
+
+function NovoSinalVida: ISinalVida;
+begin
+  Result := TSinalVida.Create;
+end;
 
 procedure EntregarErro(AExcecao: Exception; const AErro: TProc<Exception>);
 begin

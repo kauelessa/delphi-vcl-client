@@ -16,7 +16,7 @@
 interface
 
 uses
-  Vcl.Graphics, Vcl.Controls, cxButtons;
+  System.SysUtils, Vcl.Graphics, Vcl.Controls, cxButtons;
 
 type
   {$SCOPEDENUMS ON}
@@ -39,6 +39,9 @@ procedure EstilizarBotao(AButton: TcxButton; AFuncao: TFuncaoBotao);
 /// Aba selecionada (TFuncaoBotao.Aba): texto na cor da marca e sublinhado.
 procedure SelecionarAba(AButton: TcxButton; ASelecionada: Boolean);
 procedure ArredondarCartao(AControle: TWinControl; ARaio: Integer = 14);
+/// Mostra o erro de uma chamada assíncrona com o mesmo tratamento das exceções da tela
+/// (Application.OnException da janela principal: aviso para regra violada, erro + log para o resto).
+procedure MostrarErro(AErro: Exception);
 
 implementation
 
@@ -116,6 +119,14 @@ end;
 procedure ArredondarCartao(AControle: TWinControl; ARaio: Integer);
 begin
   TArredondador.Criar(AControle, ARaio);
+end;
+
+procedure MostrarErro(AErro: Exception);
+begin
+  if Assigned(Application.OnException) then
+    Application.OnException(Application, AErro)
+  else
+    Application.ShowException(AErro);
 end;
 
 function CorDeFundoDoPai(AControle: TControl): TColor;

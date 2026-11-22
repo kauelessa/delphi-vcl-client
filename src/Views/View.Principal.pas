@@ -50,7 +50,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Infra.Async, Infra.Excecoes, View.Estilo, View.Relogin;
+  Infra.Async, Infra.Excecoes, View.Estilo, View.Relogin, View.ListaBase, View.Clientes, View.Produtos;
 
 const
   PAINEL_SESSAO = 0;
@@ -107,7 +107,12 @@ end;
 procedure TfrmPrincipal.AbrirAba(AAba: TAba);
 begin
   SelecionarAbaAtual(AAba);
-  // as telas de cada aba entram nas próximas etapas (frames hospedados no cartão)
+  case AAba of
+    TAba.Clientes: AbrirTela(TfraClientes);
+    TAba.Produtos: AbrirTela(TfraProdutos);
+  else
+    AbrirTela(nil); // pedidos entram na próxima etapa
+  end;
 end;
 
 procedure TfrmPrincipal.AbrirTela(AClasse: TCustomFrameClass);
@@ -118,6 +123,8 @@ begin
   FTela := AClasse.Create(Self);
   FTela.Parent := pnlCartao;
   FTela.Align := alClient;
+  if FTela is TfraListaBase then
+    TfraListaBase(FTela).Carregar(1);
 end;
 
 procedure TfrmPrincipal.btnAbaClick(Sender: TObject);

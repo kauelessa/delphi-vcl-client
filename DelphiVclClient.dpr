@@ -34,7 +34,15 @@ uses
   View.Estilo in 'src\Views\View.Estilo.pas',
   View.Login in 'src\Views\View.Login.pas' {frmLogin},
   View.Relogin in 'src\Views\View.Relogin.pas' {frmRelogin},
-  View.Principal in 'src\Views\View.Principal.pas' {frmPrincipal};
+  View.Principal in 'src\Views\View.Principal.pas' {frmPrincipal},
+  Controller.Preferencias in 'src\Controllers\Controller.Preferencias.pas',
+  Controller.Cliente in 'src\Controllers\Controller.Cliente.pas',
+  Controller.Produto in 'src\Controllers\Controller.Produto.pas',
+  View.ListaBase in 'src\Views\View.ListaBase.pas' {fraListaBase: TFrame},
+  View.Clientes in 'src\Views\View.Clientes.pas',
+  View.Produtos in 'src\Views\View.Produtos.pas',
+  View.ClienteEdicao in 'src\Views\View.ClienteEdicao.pas' {frmClienteEdicao},
+  View.ProdutoEdicao in 'src\Views\View.ProdutoEdicao.pas' {frmProdutoEdicao};
 
 {$R *.res}
 
