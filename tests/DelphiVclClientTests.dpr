@@ -44,7 +44,9 @@ uses
   Service.Pedido in '..\src\Services\Service.Pedido.pas',
   Test.Pedido in 'Test.Pedido.pas',
   Infra.Async in '..\src\Infra\Infra.Async.pas',
-  Test.Async in 'Test.Async.pas';
+  Controller.Preferencias in '..\src\Controllers\Controller.Preferencias.pas',
+  Test.Async in 'Test.Async.pas',
+  Test.Preferencias in 'Test.Preferencias.pas';
 
 var
   LRunner: ITestRunner;

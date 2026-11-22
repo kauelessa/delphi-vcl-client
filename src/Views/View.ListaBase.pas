@@ -58,6 +58,7 @@ type
     FOcupado: Boolean;
     FColunaId: TcxGridColumn;
     FCarregandoPreferencias: Boolean;
+    function ChaveLayout: string;
     procedure DefinirOcupado(AOcupado: Boolean);
     procedure AtualizarRodape(ATotal: Integer);
   protected
@@ -125,7 +126,7 @@ begin
   FColunaId.Visible := False;
   FColunaId.VisibleForCustomization := False;
   CriarColunas;
-  tvLista.RestoreFromIniFile(TPreferenciasTela.ArquivoGrids, False, False, [], ClassName);
+  tvLista.RestoreFromIniFile(TPreferenciasTela.ArquivoGrids, False, False, [], ChaveLayout);
 
   FCarregandoPreferencias := True;
   try
@@ -142,7 +143,7 @@ destructor TfraListaBase.Destroy;
 begin
   FSinal.Desativar;
   try
-    tvLista.StoreToIniFile(TPreferenciasTela.ArquivoGrids, False, [], ClassName);
+    tvLista.StoreToIniFile(TPreferenciasTela.ArquivoGrids, False, [], ChaveLayout);
   except
     // preferência de tela não pode impedir o fechamento
   end;
@@ -157,6 +158,17 @@ end;
 function TfraListaBase.PodeInativarSelecionado: Boolean;
 begin
   Result := True;
+end;
+
+function TfraListaBase.ChaveLayout: string;
+var
+  LNomes: TArray<string>;
+  I: Integer;
+begin
+  SetLength(LNomes, tvLista.ColumnCount);
+  for I := 0 to tvLista.ColumnCount - 1 do
+    LNomes[I] := tvLista.Columns[I].Name;
+  Result := TPreferenciasTela.ChaveGrid(ClassName, LNomes);
 end;
 
 function TfraListaBase.AdicionarColuna(const ANome, ATitulo: string; ALargura: Integer;
