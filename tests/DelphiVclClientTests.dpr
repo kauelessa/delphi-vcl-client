@@ -7,7 +7,15 @@ uses
   System.SysUtils,
   DUnitX.Loggers.Console,
   DUnitX.Loggers.Xml.NUnit,
-  DUnitX.TestFramework;
+  DUnitX.TestFramework,
+  Infra.Excecoes in '..\src\Infra\Infra.Excecoes.pas',
+  Infra.Config in '..\src\Infra\Infra.Config.pas',
+  Infra.Log in '..\src\Infra\Infra.Log.pas',
+  Infra.LogHttp in '..\src\Infra\Infra.LogHttp.pas',
+  Infra.Http in '..\src\Infra\Infra.Http.pas',
+  Test.LogHttp in 'Test.LogHttp.pas',
+  Test.Config in 'Test.Config.pas',
+  Test.Http in 'Test.Http.pas';
 
 var
   LRunner: ITestRunner;
