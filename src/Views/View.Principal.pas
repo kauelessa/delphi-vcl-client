@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes, Vcl.Graphics, Vcl.Controls,
   Vcl.Forms, Vcl.Dialogs, System.UITypes, Vcl.ExtCtrls, Vcl.Menus, Vcl.StdCtrls, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, cxLabel, cxButtons,
-  dxPanel, dxStatusBar, Controller.Principal;
+  dxPanel, dxStatusBar, Infra.Async, Controller.Principal;
 
 type
   {$SCOPEDENUMS ON}
@@ -34,6 +34,7 @@ type
     FController: TPrincipalController;
     FTela: TCustomFrame;
     FVerificandoHealth: Boolean;
+    FSinal: ISinalVida; // o health check pode responder depois que a janela fechou
     procedure TratarExcecao(Sender: TObject; E: Exception);
     procedure AtualizarHealth(AOnline: Boolean);
     procedure SelecionarAbaAtual(AAba: TAba);
@@ -50,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Infra.Async, Infra.Excecoes, View.Estilo, View.Relogin, View.ListaBase, View.Clientes, View.Produtos, View.Pedidos;
+  Infra.Excecoes, View.Estilo, View.Relogin, View.ListaBase, View.Clientes, View.Produtos, View.Pedidos;
 
 const
   PAINEL_SESSAO = 0;
@@ -59,6 +60,7 @@ const
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
   FController := TPrincipalController.Create;
+  FSinal := NovoSinalVida;
   Application.OnException := TratarExcecao;
   FController.RegistrarRelogin(TfrmRelogin.PedirSenha);
 
@@ -80,6 +82,7 @@ end;
 
 procedure TfrmPrincipal.FormDestroy(Sender: TObject);
 begin
+  FSinal.Desativar;
   Application.OnException := nil;
   FController.RegistrarRelogin(nil);
   FController.Free;
@@ -140,22 +143,28 @@ end;
 procedure TfrmPrincipal.tmrHealthTimer(Sender: TObject);
 var
   LOnline: Boolean;
+  LSinal: ISinalVida;
 begin
   if FVerificandoHealth then
     Exit;
   FVerificandoHealth := True;
+  LSinal := FSinal;
   ExecutarAsync(
     procedure
     begin
-      LOnline := FController.ApiOnline;
+      LOnline := TPrincipalController.ApiOnlineAgora;
     end,
     procedure
     begin
+      if not LSinal.Ativo then
+        Exit;
       FVerificandoHealth := False;
       AtualizarHealth(LOnline);
     end,
     procedure(E: Exception)
     begin
+      if not LSinal.Ativo then
+        Exit;
       FVerificandoHealth := False;
       AtualizarHealth(False);
     end);

@@ -11,7 +11,8 @@ type
     function DescricaoSessao: string;
     function Usuario: string;
     /// Chamada de rede: rodar fora da thread principal. Nunca levanta exceção.
-    function ApiOnline: Boolean;
+    /// Método de classe: a janela pode fechar no meio da chamada sem problema.
+    class function ApiOnlineAgora: Boolean; static;
     function IntervaloHealthMs: Integer;
     procedure RegistrarRelogin(APedirSenha: TPedirSenha);
     procedure RegistrarErro(const AMensagem: string);
@@ -39,7 +40,7 @@ begin
   Result := TFabrica.Sessao.Usuario;
 end;
 
-function TPrincipalController.ApiOnline: Boolean;
+class function TPrincipalController.ApiOnlineAgora: Boolean;
 begin
   Result := TFabrica.Health.Online(TFabrica.Sessao.UrlBase);
 end;
