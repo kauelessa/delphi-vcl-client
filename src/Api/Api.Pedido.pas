@@ -3,7 +3,7 @@
 interface
 
 uses
-  Model.Pedido, Model.Pagina, Api.Base;
+  System.SysUtils, Model.Pedido, Model.Pagina, Api.Base;
 
 type
   // objetos devolvidos são do chamador (libere com Free)
@@ -14,6 +14,8 @@ type
     function Obter(AId: Integer): TPedido;
     function Criar(AClienteId: Integer; const AItens: TArray<TItemNovo>): TPedido;
     function Cancelar(AId: Integer): TPedido;
+    /// PNG da assinatura do cliente; vazio quando o pedido não tem.
+    function LerAssinatura(AId: Integer): TBytes;
   end;
 
   TPedidoApi = class(TApiBase, IPedidoApi)
@@ -22,12 +24,13 @@ type
     function Obter(AId: Integer): TPedido;
     function Criar(AClienteId: Integer; const AItens: TArray<TItemNovo>): TPedido;
     function Cancelar(AId: Integer): TPedido;
+    function LerAssinatura(AId: Integer): TBytes;
   end;
 
 implementation
 
 uses
-  System.SysUtils, System.JSON, Infra.Http, Infra.Json;
+  System.JSON, Infra.Http, Infra.Json, Infra.Excecoes;
 
 function PedidoDeJson(AJson: TJSONObject): TPedido;
 var
@@ -144,6 +147,16 @@ function TPedidoApi.Cancelar(AId: Integer): TPedido;
 begin
   // corpo "{}" porque o middleware JSON da API recusa PATCH com corpo vazio (400)
   Result := PedidoDoTexto(Enviar(THttpMetodo.Patch, '/pedidos/' + AId.ToString + '/cancelar', '{}'));
+end;
+
+function TPedidoApi.LerAssinatura(AId: Integer): TBytes;
+begin
+  try
+    Result := EnviarBinario(THttpMetodo.Get, '/pedidos/' + AId.ToString + '/assinatura');
+  except
+    on EApiNaoEncontrado do
+      Result := nil;
+  end;
 end;
 
 end.

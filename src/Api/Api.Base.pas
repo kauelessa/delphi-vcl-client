@@ -31,6 +31,8 @@ type
   protected
     /// Devolve o corpo da resposta 2xx; demais status viram exceção.
     function Enviar(AMetodo: THttpMetodo; const ARota: string; const ACorpo: string = ''): string;
+    /// Como Enviar, mas devolve o corpo cru (imagens).
+    function EnviarBinario(AMetodo: THttpMetodo; const ARota: string): TBytes;
     /// Converte { dados, pagina, limite, total } usando AConverter para cada item de "dados".
     function LerPagina<T: class>(const AJson: string; const AConverter: TFunc<TJSONObject, T>): TPagina<T>;
     /// Rota de listagem: "/recurso?pagina=1&limite=20" + "&<nome>=<valor>" quando o valor não é vazio.
@@ -145,6 +147,17 @@ begin
     LResposta := FHttp.Executar(AMetodo, FSessao.UrlBase + ARota, ACorpo, FSessao.Token);
   VerificarResposta(LResposta);
   Result := LResposta.Corpo;
+end;
+
+function TApiBase.EnviarBinario(AMetodo: THttpMetodo; const ARota: string): TBytes;
+var
+  LResposta: THttpResposta;
+begin
+  LResposta := FHttp.Executar(AMetodo, FSessao.UrlBase + ARota, '', FSessao.Token);
+  if (LResposta.Status = 401) and FSessao.Relogar then
+    LResposta := FHttp.Executar(AMetodo, FSessao.UrlBase + ARota, '', FSessao.Token);
+  VerificarResposta(LResposta);
+  Result := LResposta.Bytes;
 end;
 
 end.

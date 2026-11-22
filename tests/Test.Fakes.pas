@@ -3,7 +3,7 @@ unit Test.Fakes;
 interface
 
 uses
-  System.Generics.Collections, Infra.Http, Api.Base;
+  System.SysUtils, System.Generics.Collections, Infra.Http, Api.Base;
 
 type
   THttpChamada = record
@@ -22,6 +22,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Enfileirar(AStatus: Integer; const ACorpo: string);
+    procedure EnfileirarBytes(AStatus: Integer; const ABytes: TBytes; const ATipo: string);
     function Executar(AMetodo: THttpMetodo; const AUrl, ACorpo, AToken: string): THttpResposta;
     property Chamadas: TList<THttpChamada> read FChamadas;
   end;
@@ -45,9 +46,6 @@ type
 
 implementation
 
-uses
-  System.SysUtils;
-
 { THttpFake }
 
 constructor THttpFake.Create;
@@ -70,6 +68,19 @@ var
 begin
   LResposta.Status := AStatus;
   LResposta.Corpo := ACorpo;
+  LResposta.Bytes := TEncoding.UTF8.GetBytes(ACorpo);
+  LResposta.TipoConteudo := 'application/json; charset=utf-8';
+  FRespostas.Enqueue(LResposta);
+end;
+
+procedure THttpFake.EnfileirarBytes(AStatus: Integer; const ABytes: TBytes; const ATipo: string);
+var
+  LResposta: THttpResposta;
+begin
+  LResposta.Status := AStatus;
+  LResposta.Corpo := '';
+  LResposta.Bytes := ABytes;
+  LResposta.TipoConteudo := ATipo;
   FRespostas.Enqueue(LResposta);
 end;
 

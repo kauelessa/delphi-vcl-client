@@ -3,7 +3,7 @@
 interface
 
 uses
-  Model.Pedido, Model.Pagina, Model.PedidoDigitacao, Api.Pedido, Service.Rascunho;
+  System.SysUtils, Model.Pedido, Model.Pagina, Model.PedidoDigitacao, Api.Pedido, Service.Rascunho;
 
 type
   IPedidoService = interface
@@ -11,6 +11,7 @@ type
     function Listar(APagina, ALimite, AClienteId: Integer): TPagina<TPedido>;
     function Obter(AId: Integer): TPedido;
     function Cancelar(AId: Integer): TPedido;
+    function LerAssinatura(AId: Integer): TBytes;
     /// Envia à API. Sucesso descarta o rascunho; erro (inclusive relogin cancelado) mantém.
     function Enviar(APedido: TPedidoEmDigitacao): TPedido;
     function Rascunho: IRascunhoPedido;
@@ -25,6 +26,7 @@ type
     function Listar(APagina, ALimite, AClienteId: Integer): TPagina<TPedido>;
     function Obter(AId: Integer): TPedido;
     function Cancelar(AId: Integer): TPedido;
+    function LerAssinatura(AId: Integer): TBytes;
     function Enviar(APedido: TPedidoEmDigitacao): TPedido;
     function Rascunho: IRascunhoPedido;
   end;
@@ -32,7 +34,7 @@ type
 implementation
 
 uses
-  System.SysUtils, Infra.Excecoes;
+  Infra.Excecoes;
 
 constructor TPedidoService.Create(AApi: IPedidoApi; ARascunho: IRascunhoPedido);
 begin
@@ -54,6 +56,11 @@ end;
 function TPedidoService.Cancelar(AId: Integer): TPedido;
 begin
   Result := FApi.Cancelar(AId);
+end;
+
+function TPedidoService.LerAssinatura(AId: Integer): TBytes;
+begin
+  Result := FApi.LerAssinatura(AId);
 end;
 
 function TPedidoService.Enviar(APedido: TPedidoEmDigitacao): TPedido;

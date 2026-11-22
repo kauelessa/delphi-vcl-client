@@ -6,7 +6,7 @@
 interface
 
 uses
-  Model.Pedido, Model.Pagina, Model.PedidoDigitacao;
+  System.SysUtils, Model.Pedido, Model.Pagina, Model.PedidoDigitacao;
 
 type
   TPedidoController = class
@@ -14,6 +14,7 @@ type
     class function Listar(APagina, ALimite, AClienteId: Integer): TPagina<TPedido>; static;
     class function Obter(AId: Integer): TPedido; static;
     class function Cancelar(AId: Integer): TPedido; static;
+    class function LerAssinatura(AId: Integer): TBytes; static;
     /// Sucesso apaga o rascunho; erro mantém.
     class function Enviar(APedido: TPedidoEmDigitacao): TPedido; static;
     // rascunho em disco (rápido, pode rodar na thread principal)
@@ -42,6 +43,11 @@ end;
 class function TPedidoController.Cancelar(AId: Integer): TPedido;
 begin
   Result := TFabrica.Pedidos.Cancelar(AId);
+end;
+
+class function TPedidoController.LerAssinatura(AId: Integer): TBytes;
+begin
+  Result := TFabrica.Pedidos.LerAssinatura(AId);
 end;
 
 class function TPedidoController.Enviar(APedido: TPedidoEmDigitacao): TPedido;

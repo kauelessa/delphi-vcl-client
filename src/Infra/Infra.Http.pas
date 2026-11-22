@@ -12,7 +12,7 @@
 interface
 
 uses
-  Infra.LogHttp;
+  System.SysUtils, Infra.LogHttp;
 
 type
   {$SCOPEDENUMS ON}
@@ -21,7 +21,9 @@ type
 
   THttpResposta = record
     Status: Integer;
-    Corpo: string;
+    Corpo: string;          // Bytes lidos como UTF-8
+    Bytes: TBytes;          // corpo cru (imagens)
+    TipoConteudo: string;   // Content-Type da resposta
   end;
 
   IHttpClient = interface
@@ -45,11 +47,21 @@ const
 implementation
 
 uses
-  System.SysUtils, System.Classes, System.Diagnostics, System.Net.HttpClient,
+  System.Classes, System.Diagnostics, System.Net.HttpClient,
   System.Net.URLClient, System.NetConsts, Infra.Excecoes;
 
 const
   MSG_INDISPONIVEL = 'Não foi possível falar com a API. Confira se ela está no ar e o endereço do perfil.';
+
+// PNG no log só atrapalha: imagem vira "<N bytes, image/png>"
+function CorpoParaLog(const AResposta: THttpResposta): string;
+begin
+  if (Length(AResposta.Bytes) = 0) or AResposta.TipoConteudo.Contains('json') or
+    AResposta.TipoConteudo.StartsWith('text') then
+    Result := AResposta.Corpo
+  else
+    Result := Format('<%d bytes, %s>', [Length(AResposta.Bytes), AResposta.TipoConteudo]);
+end;
 
 constructor TNetHttpClientAdapter.Create(ATimeoutMs: Integer; ALogHttp: ILogHttp);
 begin
@@ -66,6 +78,7 @@ var
   LResposta: IHTTPResponse;
   LCabecalhos: TNetHeaders;
   LTempo: TStopwatch;
+  LStream: TStream;
 begin
   // um THTTPClient por chamada: as chamadas rodam em threads diferentes
   LHttp := THTTPClient.Create;
@@ -100,10 +113,16 @@ begin
     end;
 
     Result.Status := LResposta.StatusCode;
-    Result.Corpo := LResposta.ContentAsString(TEncoding.UTF8);
+    Result.TipoConteudo := LResposta.HeaderValue['Content-Type'];
+    LStream := LResposta.ContentStream;
+    LStream.Position := 0;
+    SetLength(Result.Bytes, LStream.Size);
+    if LStream.Size > 0 then
+      LStream.ReadBuffer(Result.Bytes[0], LStream.Size);
+    Result.Corpo := TEncoding.UTF8.GetString(Result.Bytes);
     if FLogHttp <> nil then
       FLogHttp.Registrar(NOMES_METODO[AMetodo], AUrl, Result.Status, LTempo.ElapsedMilliseconds,
-        ACorpo, Result.Corpo);
+        ACorpo, CorpoParaLog(Result));
   finally
     LCorpo.Free;
     LHttp.Free;

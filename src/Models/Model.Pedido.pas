@@ -61,10 +61,19 @@ type
     Quantidade: Integer;
   end;
 
+/// Link do OpenStreetMap com um marcador no ponto (sempre com ponto decimal).
+function UrlMapa(ALatitude, ALongitude: Double): string;
+
 implementation
 
 uses
   System.SysUtils;
+
+function UrlMapa(ALatitude, ALongitude: Double): string;
+begin
+  Result := Format('https://www.openstreetmap.org/?mlat=%.6f&mlon=%.6f#map=17/%.6f/%.6f',
+    [ALatitude, ALongitude, ALatitude, ALongitude], TFormatSettings.Invariant);
+end;
 
 { TStatusPedidoHelper }
 

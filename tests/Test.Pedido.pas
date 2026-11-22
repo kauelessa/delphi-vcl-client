@@ -63,6 +63,12 @@ type
     [Test]
     procedure Listar_PedidoSemCamposNovos_FicaVazio;
     [Test]
+    procedure LerAssinatura_DevolveBytesDoPng;
+    [Test]
+    procedure LerAssinatura_404_DevolveVazio;
+    [Test]
+    procedure UrlMapa_UsaPontoDecimalComRegionalPtBr;
+    [Test]
     procedure Cancelar_UsaPatch;
     [Test]
     procedure Cancelar_EnviaCorpoJsonVazio;
@@ -334,6 +340,42 @@ begin
     end;
   finally
     LPagina.Free;
+  end;
+end;
+
+procedure TTestPedido.LerAssinatura_DevolveBytesDoPng;
+const
+  PNG_8_BYTES: array[0..7] of Byte = ($89, $50, $4E, $47, $0D, $0A, $1A, $0A);
+var
+  LEsperado, LBytes: TBytes;
+begin
+  SetLength(LEsperado, Length(PNG_8_BYTES));
+  Move(PNG_8_BYTES[0], LEsperado[0], Length(PNG_8_BYTES));
+  FHttp.EnfileirarBytes(200, LEsperado, 'image/png');
+  LBytes := FService.LerAssinatura(7);
+  Assert.AreEqual(Ord(THttpMetodo.Get), Ord(FHttp.Chamadas[0].Metodo));
+  Assert.AreEqual('http://api.teste/pedidos/7/assinatura', FHttp.Chamadas[0].Url);
+  Assert.AreEqual(Length(LEsperado), Length(LBytes));
+  Assert.IsTrue(CompareMem(@LEsperado[0], @LBytes[0], Length(LEsperado)), 'bytes diferentes');
+end;
+
+procedure TTestPedido.LerAssinatura_404_DevolveVazio;
+begin
+  FHttp.Enfileirar(404, '{"erro":"Pedido sem assinatura."}');
+  Assert.AreEqual(0, Integer(Length(FService.LerAssinatura(7))));
+end;
+
+procedure TTestPedido.UrlMapa_UsaPontoDecimalComRegionalPtBr;
+var
+  LSeparador: Char;
+begin
+  LSeparador := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := ',';
+  try
+    Assert.AreEqual('https://www.openstreetmap.org/?mlat=-23.550500&mlon=-46.633300#map=17/-23.550500/-46.633300',
+      UrlMapa(-23.5505, -46.6333));
+  finally
+    FormatSettings.DecimalSeparator := LSeparador;
   end;
 end;
 

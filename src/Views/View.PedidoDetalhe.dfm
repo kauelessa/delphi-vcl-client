@@ -4,7 +4,7 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
   BorderStyle = bsDialog
   Caption = 'Pedido'
   ClientHeight = 470
-  ClientWidth = 640
+  ClientWidth = 900
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,12 +14,13 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
   Position = poOwnerFormCenter
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   TextHeight = 17
   object pnlCartao: TdxPanel
     Left = 16
     Top = 16
-    Width = 608
+    Width = 868
     Height = 438
     Color = clWhite
     TabOrder = 0
@@ -30,7 +31,7 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
       Transparent = True
     end
     object lblStatus: TcxLabel
-      Left = 460
+      Left = 720
       Top = 18
       AutoSize = False
       Caption = 'ABERTO'
@@ -51,6 +52,74 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
       Top = 80
       Caption = 'Data'
       Transparent = True
+    end
+    object lblVendedor: TcxLabel
+      Left = 320
+      Top = 58
+      Caption = 'Vendedor'
+      Transparent = True
+    end
+    object lblOrigem: TcxLabel
+      Left = 320
+      Top = 80
+      Caption = 'Origem'
+      Transparent = True
+    end
+    object lblNota: TcxLabel
+      Left = 612
+      Top = 112
+      AutoSize = False
+      Caption = 'NF-e'
+      Properties.WordWrap = True
+      Transparent = True
+      Height = 44
+      Width = 232
+    end
+    object lblLocal: TcxLabel
+      Left = 612
+      Top = 162
+      AutoSize = False
+      Caption = 'Local'
+      Properties.WordWrap = True
+      Transparent = True
+      Height = 44
+      Width = 232
+    end
+    object btnMapa: TcxButton
+      Left = 612
+      Top = 208
+      Width = 140
+      Height = 32
+      Caption = 'Ver no mapa'
+      TabOrder = 2
+      OnClick = btnMapaClick
+    end
+    object lblAssinatura: TcxLabel
+      Left = 612
+      Top = 252
+      Caption = 'Assinatura do cliente'
+      Transparent = True
+    end
+    object imgAssinatura: TcxImage
+      Left = 612
+      Top = 276
+      Properties.GraphicClassName = 'TdxSmartImage'
+      Properties.ReadOnly = True
+      Properties.ShowFocusRect = False
+      Style.BorderStyle = ebsSingle
+      TabOrder = 3
+      Height = 76
+      Width = 232
+    end
+    object lblObservacao: TcxLabel
+      Left = 24
+      Top = 356
+      AutoSize = False
+      Caption = 'Observa'#231#227'o'
+      Properties.WordWrap = True
+      Transparent = True
+      Height = 32
+      Width = 340
     end
     object grdItens: TcxGrid
       Left = 24
@@ -108,7 +177,7 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
       end
     end
     object lblTotal: TcxLabel
-      Left = 384
+      Left = 644
       Top = 356
       AutoSize = False
       Caption = 'Total'
@@ -119,7 +188,7 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
       Width = 200
     end
     object btnFechar: TcxButton
-      Left = 474
+      Left = 734
       Top = 392
       Width = 110
       Height = 34
