@@ -1,4 +1,4 @@
-program DelphiVclClient;
+﻿program DelphiVclClient;
 
 uses
   Vcl.Forms,
@@ -28,7 +28,13 @@ uses
   Service.Produto in 'src\Services\Service.Produto.pas',
   Service.Rascunho in 'src\Services\Service.Rascunho.pas',
   Service.Pedido in 'src\Services\Service.Pedido.pas',
-  Controller.Fabrica in 'src\Controllers\Controller.Fabrica.pas';
+  Controller.Fabrica in 'src\Controllers\Controller.Fabrica.pas',
+  Controller.Login in 'src\Controllers\Controller.Login.pas',
+  Controller.Principal in 'src\Controllers\Controller.Principal.pas',
+  View.Estilo in 'src\Views\View.Estilo.pas',
+  View.Login in 'src\Views\View.Login.pas' {frmLogin},
+  View.Relogin in 'src\Views\View.Relogin.pas' {frmRelogin},
+  View.Principal in 'src\Views\View.Principal.pas' {frmPrincipal};
 
 {$R *.res}
 
@@ -39,5 +45,13 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.Title := 'Vendas';
+  AplicarTema;
+  LimparLogsAntigos(Config.PastaLog, Config.RetencaoLogDias);
+
+  // sem login não há o que mostrar: desistir do login fecha o programa
+  if not TfrmLogin.Executar then
+    Exit;
+
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
   Application.Run;
 end.

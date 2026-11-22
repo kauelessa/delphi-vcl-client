@@ -20,6 +20,7 @@ O cliente **não tem banco de dados**: os dados pertencem à API, que cria o pr�
 - Sempre dar preferência aos componentes do **DevExpress VCL Controls v26.1.5**: `TcxGrid`, `TcxTextEdit`, `TcxMaskEdit`, `TcxCurrencyEdit`, `TcxSpinEdit`, `TcxComboBox`, `TdxLayoutControl`, `TcxPageControl`, `TdxStatusBar`, `TdxSkinController`.
 - Usar componentes padrão da VCL apenas quando não houver equivalente DevExpress adequado, explicando o motivo.
 - Visual: fundo cinza bem claro, conteúdo em cartões brancos arredondados, menu em abas no topo e botões em tons pastel por função (azul novo, verde editar, vermelho inativar/cancelar). Skin base `WXI`.
+- Botões e abas: `TcxButton` comum no `.dfm`, estilizado em `FormCreate` com `EstilizarBotao` (`View.Estilo`), que desenha pelo `OnCustomDraw` com GDI+. Com skin ativa o `TcxButton` ignora `Colors`, por isso o desenho próprio. Cartões: `TdxPanel` branco arredondado por `ArredondarCartao` (região da janela), mantendo o form editável no designer.
 - Nenhuma chamada à API na thread principal: usar `ExecutarAsync` (`Infra.Async`) com indicador de carregando e botões desabilitados durante a chamada.
 - Usar apenas recursos e APIs disponíveis na versão 26.1.5; se algo depender de outra versão, avisar antes.
 
