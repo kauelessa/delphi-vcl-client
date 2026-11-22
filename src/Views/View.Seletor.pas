@@ -130,6 +130,14 @@ procedure TfrmSeletor.CriarColunas;
     begin
       LColuna.PropertiesClass := TcxCurrencyEditProperties;
       TcxCurrencyEditProperties(LColuna.Properties).DisplayFormat := 'R$ ,0.00';
+      TcxCurrencyEditProperties(LColuna.Properties).Alignment.Horz := taRightJustify;
+      LColuna.HeaderAlignmentHorz := taRightJustify;
+    end
+    else if ATipo = 'Integer' then
+    begin
+      LColuna.PropertiesClass := TcxTextEditProperties;
+      TcxTextEditProperties(LColuna.Properties).Alignment.Horz := taRightJustify;
+      LColuna.HeaderAlignmentHorz := taRightJustify;
     end;
   end;
 

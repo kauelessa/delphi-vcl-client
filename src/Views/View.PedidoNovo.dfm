@@ -112,6 +112,8 @@ object frmPedidoNovo: TfrmPedidoNovo
         object colQuantidade: TcxGridColumn
           Caption = 'Qtd'
           DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taRightJustify
           HeaderAlignmentHorz = taRightJustify
           Width = 60
         end
@@ -119,6 +121,7 @@ object frmPedidoNovo: TfrmPedidoNovo
           Caption = 'Pre'#231'o unit.'
           DataBinding.ValueType = 'Currency'
           PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
           Properties.DisplayFormat = 'R$ ,0.00'
           HeaderAlignmentHorz = taRightJustify
           Width = 110
@@ -127,6 +130,7 @@ object frmPedidoNovo: TfrmPedidoNovo
           Caption = 'Total'
           DataBinding.ValueType = 'Currency'
           PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
           Properties.DisplayFormat = 'R$ ,0.00'
           HeaderAlignmentHorz = taRightJustify
           Width = 110

@@ -31,12 +31,13 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
     end
     object lblStatus: TcxLabel
       Left = 460
-      Top = 22
+      Top = 18
       AutoSize = False
       Caption = 'ABERTO'
       Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
       Transparent = True
-      Height = 21
+      Height = 30
       Width = 124
     end
     object lblCliente: TcxLabel
@@ -78,6 +79,8 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
         object colQuantidade: TcxGridColumn
           Caption = 'Qtd'
           DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taRightJustify
           HeaderAlignmentHorz = taRightJustify
           Width = 60
         end
@@ -85,6 +88,7 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
           Caption = 'Pre'#231'o unit.'
           DataBinding.ValueType = 'Currency'
           PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
           Properties.DisplayFormat = 'R$ ,0.00'
           HeaderAlignmentHorz = taRightJustify
           Width = 110
@@ -93,6 +97,7 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
           Caption = 'Total'
           DataBinding.ValueType = 'Currency'
           PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
           Properties.DisplayFormat = 'R$ ,0.00'
           HeaderAlignmentHorz = taRightJustify
           Width = 110
@@ -104,12 +109,13 @@ object frmPedidoDetalhe: TfrmPedidoDetalhe
     end
     object lblTotal: TcxLabel
       Left = 384
-      Top = 362
+      Top = 356
       AutoSize = False
       Caption = 'Total'
       Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
       Transparent = True
-      Height = 24
+      Height = 32
       Width = 200
     end
     object btnFechar: TcxButton

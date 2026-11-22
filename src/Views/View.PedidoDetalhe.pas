@@ -7,7 +7,7 @@ uses
   Vcl.Menus, Vcl.StdCtrls, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxContainer, cxEdit, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage, cxNavigator,
   dxDateRanges, dxScrollbarAnnotations, cxGridCustomTableView, cxGridTableView, cxGridCustomView,
-  cxClasses, cxGridLevel, cxGrid, cxLabel, cxButtons, cxCurrencyEdit, dxPanel, Model.Pedido;
+  cxClasses, cxGridLevel, cxGrid, cxLabel, cxTextEdit, cxButtons, cxCurrencyEdit, dxPanel, Model.Pedido;
 
 type
   TfrmPedidoDetalhe = class(TForm)
