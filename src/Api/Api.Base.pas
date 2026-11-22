@@ -13,7 +13,7 @@
 interface
 
 uses
-  Infra.Http;
+  System.SysUtils, System.JSON, Infra.Http, Model.Pagina;
 
 type
   ISessaoApi = interface
@@ -31,17 +31,24 @@ type
   protected
     /// Devolve o corpo da resposta 2xx; demais status viram exceção.
     function Enviar(AMetodo: THttpMetodo; const ARota: string; const ACorpo: string = ''): string;
+    /// Converte { dados, pagina, limite, total } usando AConverter para cada item de "dados".
+    function LerPagina<T: class>(const AJson: string; const AConverter: TFunc<TJSONObject, T>): TPagina<T>;
+    /// Rota de listagem: "/recurso?pagina=1&limite=20" + "&<nome>=<valor>" quando o valor não é vazio.
+    function RotaPaginada(const ARecurso: string; APagina, ALimite: Integer;
+      const AParametro: string = ''; const AValor: string = ''): string;
     property Http: IHttpClient read FHttp;
     property Sessao: ISessaoApi read FSessao;
   public
     constructor Create(AHttp: IHttpClient; ASessao: ISessaoApi);
     class procedure VerificarResposta(const AResposta: THttpResposta); static;
+    /// Codifica um valor de parâmetro de URL (RFC 3986): só A-Z a-z 0-9 - _ . ~ passam direto.
+    class function ParametroUrl(const AValor: string): string; static;
   end;
 
 implementation
 
 uses
-  System.SysUtils, System.JSON, Infra.Excecoes;
+  Infra.Json, Infra.Excecoes;
 
 constructor TApiBase.Create(AHttp: IHttpClient; ASessao: ISessaoApi);
 begin
@@ -81,6 +88,51 @@ begin
     // 500 e companhia: o detalhe técnico fica no log da API, não na tela
     raise EApiIndisponivel.Create(Format('A API encontrou um erro inesperado (HTTP %d). ' +
       'Tente novamente; se persistir, veja o log da API.', [AResposta.Status]), AResposta.Status);
+  end;
+end;
+
+class function TApiBase.ParametroUrl(const AValor: string): string;
+var
+  LByte: Byte;
+begin
+  Result := '';
+  for LByte in TEncoding.UTF8.GetBytes(AValor) do
+    if CharInSet(Char(LByte), ['A'..'Z', 'a'..'z', '0'..'9', '-', '_', '.', '~']) then
+      Result := Result + Char(LByte)
+    else
+      Result := Result + '%' + IntToHex(LByte, 2);
+end;
+
+function TApiBase.RotaPaginada(const ARecurso: string; APagina, ALimite: Integer;
+  const AParametro, AValor: string): string;
+begin
+  Result := Format('%s?pagina=%d&limite=%d', [ARecurso, APagina, ALimite]);
+  if (AParametro <> '') and (AValor.Trim <> '') then
+    Result := Result + '&' + AParametro + '=' + ParametroUrl(AValor.Trim);
+end;
+
+function TApiBase.LerPagina<T>(const AJson: string; const AConverter: TFunc<TJSONObject, T>): TPagina<T>;
+var
+  LJson: TJSONObject;
+  LDados: TJSONArray;
+  LItem: TJSONValue;
+begin
+  Result := TPagina<T>.Create;
+  try
+    LJson := TJSONObject.ParseJSONValue(AJson) as TJSONObject;
+    try
+      Result.Pagina := LerInteiro(LJson, 'pagina');
+      Result.Limite := LerInteiro(LJson, 'limite');
+      Result.Total := LerInteiro(LJson, 'total');
+      if LJson.TryGetValue<TJSONArray>('dados', LDados) then
+        for LItem in LDados do
+          Result.Dados.Add(AConverter(LItem as TJSONObject));
+    finally
+      LJson.Free;
+    end;
+  except
+    Result.Free;
+    raise;
   end;
 end;
 

@@ -28,7 +28,15 @@ uses
   Api.Health in '..\src\Api\Api.Health.pas',
   Service.Sessao in '..\src\Services\Service.Sessao.pas',
   Test.Dpapi in 'Test.Dpapi.pas',
-  Test.Sessao in 'Test.Sessao.pas';
+  Test.Sessao in 'Test.Sessao.pas',
+  Model.Pagina in '..\src\Models\Model.Pagina.pas',
+  Model.Cliente in '..\src\Models\Model.Cliente.pas',
+  Model.Produto in '..\src\Models\Model.Produto.pas',
+  Api.Cliente in '..\src\Api\Api.Cliente.pas',
+  Api.Produto in '..\src\Api\Api.Produto.pas',
+  Service.Cliente in '..\src\Services\Service.Cliente.pas',
+  Service.Produto in '..\src\Services\Service.Produto.pas',
+  Test.ClienteProduto in 'Test.ClienteProduto.pas';
 
 var
   LRunner: ITestRunner;
