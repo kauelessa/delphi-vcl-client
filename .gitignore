@@ -1,0 +1,43 @@
+# Delphi: binários e intermediários
+*.exe
+*.dll
+*.bpl
+*.bpi
+*.dcp
+*.so
+*.apk
+*.drc
+*.map
+*.dres
+*.rsm
+*.tds
+*.dcu
+*.lib
+*.a
+*.o
+*.ocx
+
+# IDE
+*.cfg
+*.hpp
+*Resource.rc
+*.local
+*.identcache
+*.projdata
+*.tvsconfig
+*.dsk
+*.dsv
+__history/
+__recovery/
+*.~*
+*.stat
+Win32/
+Win64/
+
+# Configuração local e dados gerados em execução
+config.ini
+logs/
+dunitx-results.xml
+
+# Rascunhos de planejamento do Claude Code (superpowers)
+.superpowers/
