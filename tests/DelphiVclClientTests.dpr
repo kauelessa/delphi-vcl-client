@@ -36,7 +36,13 @@ uses
   Api.Produto in '..\src\Api\Api.Produto.pas',
   Service.Cliente in '..\src\Services\Service.Cliente.pas',
   Service.Produto in '..\src\Services\Service.Produto.pas',
-  Test.ClienteProduto in 'Test.ClienteProduto.pas';
+  Test.ClienteProduto in 'Test.ClienteProduto.pas',
+  Model.Pedido in '..\src\Models\Model.Pedido.pas',
+  Model.PedidoDigitacao in '..\src\Models\Model.PedidoDigitacao.pas',
+  Api.Pedido in '..\src\Api\Api.Pedido.pas',
+  Service.Rascunho in '..\src\Services\Service.Rascunho.pas',
+  Service.Pedido in '..\src\Services\Service.Pedido.pas',
+  Test.Pedido in 'Test.Pedido.pas';
 
 var
   LRunner: ITestRunner;
