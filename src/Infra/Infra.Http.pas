@@ -41,6 +41,9 @@ type
     function Executar(AMetodo: THttpMetodo; const AUrl, ACorpo, AToken: string): THttpResposta;
   end;
 
+/// Corpo como texto UTF-8 quando é JSON/texto (ou sem tipo); binário (PNG...) fica ''.
+function CorpoComoTexto(const ABytes: TBytes; const ATipo: string): string;
+
 const
   NOMES_METODO: array[THttpMetodo] of string = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE');
 
@@ -53,14 +56,26 @@ uses
 const
   MSG_INDISPONIVEL = 'Não foi possível falar com a API. Confira se ela está no ar e o endereço do perfil.';
 
+function CorpoComoTexto(const ABytes: TBytes; const ATipo: string): string;
+begin
+  Result := '';
+  if (ATipo <> '') and not ATipo.Contains('json') and not ATipo.StartsWith('text') then
+    Exit;
+  try
+    Result := TEncoding.UTF8.GetString(ABytes);
+  except
+    on EEncodingError do
+      Result := ''; // o TEncoding.UTF8 do Delphi levanta exceção em byte inválido
+  end;
+end;
+
 // PNG no log só atrapalha: imagem vira "<N bytes, image/png>"
 function CorpoParaLog(const AResposta: THttpResposta): string;
 begin
-  if (Length(AResposta.Bytes) = 0) or AResposta.TipoConteudo.Contains('json') or
-    AResposta.TipoConteudo.StartsWith('text') then
-    Result := AResposta.Corpo
+  if (AResposta.Corpo = '') and (Length(AResposta.Bytes) > 0) then
+    Result := Format('<%d bytes, %s>', [Length(AResposta.Bytes), AResposta.TipoConteudo])
   else
-    Result := Format('<%d bytes, %s>', [Length(AResposta.Bytes), AResposta.TipoConteudo]);
+    Result := AResposta.Corpo;
 end;
 
 constructor TNetHttpClientAdapter.Create(ATimeoutMs: Integer; ALogHttp: ILogHttp);
@@ -119,7 +134,7 @@ begin
     SetLength(Result.Bytes, LStream.Size);
     if LStream.Size > 0 then
       LStream.ReadBuffer(Result.Bytes[0], LStream.Size);
-    Result.Corpo := TEncoding.UTF8.GetString(Result.Bytes);
+    Result.Corpo := CorpoComoTexto(Result.Bytes, Result.TipoConteudo);
     if FLogHttp <> nil then
       FLogHttp.Registrar(NOMES_METODO[AMetodo], AUrl, Result.Status, LTempo.ElapsedMilliseconds,
         ACorpo, CorpoParaLog(Result));
