@@ -2,7 +2,7 @@
 
 Cliente desktop em **Delphi (VCL)** com **DevExpress** que consome a **[delphi-horse-api](https://github.com/kauelessa/delphi-horse-api)**: login com JWT, cadastro de clientes e produtos e emissão de pedidos com baixa de estoque.
 
-> Faz parte do meu portfólio, junto com a API (back-end Horse + Firebird) e o [emissor de NF-e](https://github.com/kauelessa/delphi-emissor-nfe).
+> Faz parte do meu portfólio, junto com a API (back-end Horse + Firebird) e o [delphi-emissor-nfe](https://github.com/kauelessa/delphi-emissor-nfe): os pedidos criados aqui podem ser **faturados como NF-e** no emissor, que importa o pedido da API e completa os dados fiscais.
 
 ![Lista de pedidos](docs/screenshots/pedidos.png)
 
