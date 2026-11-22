@@ -98,13 +98,16 @@ begin
   LColuna.PropertiesClass := TcxDateEditProperties;
   TcxDateEditProperties(LColuna.Properties).DisplayFormat := 'dd/mm/yyyy hh:nn';
   TcxDateEditProperties(LColuna.Properties).Kind := ckDateTime;
-  AdicionarColuna('colCliente', 'Cliente', 280);
+  AdicionarColuna('colCliente', 'Cliente', 240);
+  AdicionarColuna('colVendedor', 'Vendedor', 160);
+  AdicionarColuna('colOrigem', 'Origem', 70);
   FColunaStatus := AdicionarColuna('colStatus', 'Status', 110);
   LColuna := AdicionarColuna('colTotal', 'Total', 120, 'Currency');
   LColuna.PropertiesClass := TcxCurrencyEditProperties;
   TcxCurrencyEditProperties(LColuna.Properties).DisplayFormat := 'R$ ,0.00';
   TcxCurrencyEditProperties(LColuna.Properties).Alignment.Horz := taRightJustify;
   LColuna.HeaderAlignmentHorz := taRightJustify;
+  AdicionarColuna('colNota', 'NF-e', 90);
 end;
 
 procedure TfraPedidos.AtualizarFiltro(const ANomeCliente: string);
@@ -154,7 +157,8 @@ begin
   for I := 0 to LPagina.Dados.Count - 1 do
   begin
     P := LPagina.Dados[I];
-    DefinirLinha(I, P.Id, [P.Id, P.Data, P.ClienteNome, P.Status.Descricao, P.ValorTotal]);
+    DefinirLinha(I, P.Id, [P.Id, P.Data, P.ClienteNome, P.VendedorNome, P.OrigemDescricao,
+      P.Status.Descricao, P.ValorTotal, P.NotaDescricao]);
   end;
   ATotal := LPagina.Total;
   ATotalPaginas := LPagina.TotalPaginas;

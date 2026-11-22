@@ -31,7 +31,7 @@ uses
 
 function PedidoDeJson(AJson: TJSONObject): TPedido;
 var
-  LCliente: TJSONObject;
+  LCliente, LVendedor, LNota, LLocal: TJSONObject;
   LItens: TJSONArray;
   LValor: TJSONValue;
   LJsonItem: TJSONObject;
@@ -48,6 +48,26 @@ begin
     Result.Data := LerDataHora(AJson, 'data');
     Result.Status := TStatusPedido.DoTexto(LerTexto(AJson, 'status'));
     Result.ValorTotal := LerCurrency(AJson, 'valorTotal');
+    Result.Origem := LerTexto(AJson, 'origem');
+    Result.Observacao := LerTexto(AJson, 'observacao');
+    Result.TemAssinatura := LerBooleano(AJson, 'temAssinatura');
+    // vendedor, nota e localizacao vêm null quando não existem; TryGetValue<TJSONObject> recusa null
+    if AJson.TryGetValue<TJSONObject>('vendedor', LVendedor) then
+      Result.VendedorNome := LerTexto(LVendedor, 'nome');
+    if AJson.TryGetValue<TJSONObject>('nota', LNota) then
+    begin
+      Result.NotaNumero := LerInteiro(LNota, 'numero');
+      Result.NotaSerie := LerInteiro(LNota, 'serie');
+      Result.NotaChave := LerTexto(LNota, 'chave');
+      Result.NotaAutorizadaEm := LerDataHora(LNota, 'autorizadaEm');
+    end;
+    if AJson.TryGetValue<TJSONObject>('localizacao', LLocal) then
+    begin
+      Result.TemLocalizacao := True;
+      Result.Latitude := LerDouble(LLocal, 'latitude');
+      Result.Longitude := LerDouble(LLocal, 'longitude');
+      Result.Precisao := LerDouble(LLocal, 'precisao');
+    end;
     if AJson.TryGetValue<TJSONArray>('itens', LItens) then
       for LValor in LItens do
       begin

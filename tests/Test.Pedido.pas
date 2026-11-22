@@ -59,6 +59,10 @@ type
     [Test]
     procedure Listar_FiltroPorCliente_VaiNaUrl;
     [Test]
+    procedure Listar_ConverteCamposDoApp;
+    [Test]
+    procedure Listar_PedidoSemCamposNovos_FicaVazio;
+    [Test]
     procedure Cancelar_UsaPatch;
     [Test]
     procedure Cancelar_EnviaCorpoJsonVazio;
@@ -272,6 +276,62 @@ begin
     Assert.AreEqual(Currency(699.8), LPagina.Dados[0].Itens[0].ValorTotal);
     Assert.AreEqual(EncodeDateTime(2026, 11, 20, 13, 15, 0, 0),
       TTimeZone.Local.ToUniversalTime(LPagina.Dados[0].Data), OneSecond);
+  finally
+    LPagina.Free;
+  end;
+end;
+
+procedure TTestPedido.Listar_ConverteCamposDoApp;
+const
+  CHAVE = '35261111222333000181550010000001231000001230';
+var
+  LPagina: TPagina<TPedido>;
+  P: TPedido;
+begin
+  FHttp.Enfileirar(200, '{"dados":[' + PEDIDO_JSON.Replace('"status":"ABERTO"',
+    '"status":"ABERTO","origem":"APP","observacao":"Entregar pela manhã","temAssinatura":true,' +
+    '"vendedor":{"id":2,"nome":"Ana Vendedora"},' +
+    '"nota":{"numero":123,"serie":1,"chave":"' + CHAVE + '","autorizadaEm":"2026-11-22T14:05:00-03:00"},' +
+    '"localizacao":{"latitude":-23.5505,"longitude":-46.6333,"precisao":9}') +
+    '],"pagina":1,"limite":20,"total":1}');
+  LPagina := FService.Listar(1, 20, 0);
+  try
+    P := LPagina.Dados[0];
+    Assert.AreEqual('App', P.OrigemDescricao);
+    Assert.AreEqual('Ana Vendedora', P.VendedorNome);
+    Assert.AreEqual('123/1', P.NotaDescricao);
+    Assert.AreEqual(123, P.NotaNumero);
+    Assert.AreEqual(CHAVE, P.NotaChave);
+    Assert.IsTrue(P.TemLocalizacao);
+    Assert.AreEqual(-23.5505, P.Latitude, 0.000001);
+    Assert.AreEqual(-46.6333, P.Longitude, 0.000001);
+    Assert.AreEqual(9.0, P.Precisao, 0.000001);
+    Assert.IsTrue(P.TemAssinatura);
+    Assert.AreEqual('Entregar pela manhã', P.Observacao);
+  finally
+    LPagina.Free;
+  end;
+end;
+
+procedure TTestPedido.Listar_PedidoSemCamposNovos_FicaVazio;
+var
+  LPagina: TPagina<TPedido>;
+  P: TPedido;
+begin
+  // pedido como a API devolvia antes do app (e com null nos objetos que o app preenche)
+  FHttp.Enfileirar(200, '{"dados":[' + PEDIDO_JSON + ',' +
+    PEDIDO_JSON.Replace('"id":5,', '"id":6,"vendedor":null,"nota":null,"localizacao":null,"origem":"API",') +
+    '],"pagina":1,"limite":20,"total":2}');
+  LPagina := FService.Listar(1, 20, 0);
+  try
+    for P in LPagina.Dados do
+    begin
+      Assert.AreEqual('API', P.OrigemDescricao);
+      Assert.AreEqual('', P.VendedorNome);
+      Assert.AreEqual('', P.NotaDescricao);
+      Assert.IsFalse(P.TemLocalizacao);
+      Assert.IsFalse(P.TemAssinatura);
+    end;
   finally
     LPagina.Free;
   end;

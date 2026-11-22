@@ -1,4 +1,4 @@
-unit Model.Pedido;
+﻿unit Model.Pedido;
 
 interface
 
@@ -35,9 +35,24 @@ type
     Data: TDateTime;
     Status: TStatusPedido;
     ValorTotal: Currency;
+    // o que o app Força de Vendas e o emissor gravam no pedido
+    Origem: string; // 'API' ou 'APP', como vem da API
+    VendedorNome: string;
+    Observacao: string;
+    TemAssinatura: Boolean;
+    NotaNumero: Integer; // 0 = ainda não faturado
+    NotaSerie: Integer;
+    NotaChave: string;
+    NotaAutorizadaEm: TDateTime;
+    TemLocalizacao: Boolean;
+    Latitude: Double;
+    Longitude: Double;
+    Precisao: Double; // metros
     constructor Create;
     destructor Destroy; override;
     property Itens: TObjectList<TItemPedido> read FItens;
+    function OrigemDescricao: string;
+    function NotaDescricao: string;
   end;
 
   // item enviado no POST /pedidos
@@ -82,6 +97,22 @@ destructor TPedido.Destroy;
 begin
   FItens.Free;
   inherited;
+end;
+
+function TPedido.OrigemDescricao: string;
+begin
+  if SameText(Origem, 'APP') then
+    Result := 'App'
+  else
+    Result := 'API';
+end;
+
+function TPedido.NotaDescricao: string;
+begin
+  if NotaNumero = 0 then
+    Result := ''
+  else
+    Result := Format('%d/%d', [NotaNumero, NotaSerie]);
 end;
 
 end.

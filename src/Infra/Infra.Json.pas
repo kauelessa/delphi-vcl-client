@@ -13,6 +13,9 @@ function LerTexto(AObj: TJSONObject; const ANome: string): string;
 /// Ausente ou null devolve 0.
 function LerInteiro(AObj: TJSONObject; const ANome: string): Integer;
 function LerCurrency(AObj: TJSONObject; const ANome: string): Currency;
+function LerDouble(AObj: TJSONObject; const ANome: string): Double;
+/// Ausente ou null devolve False.
+function LerBooleano(AObj: TJSONObject; const ANome: string): Boolean;
 /// ISO 8601 (com ou sem fuso) convertido para a hora local.
 function LerDataHora(AObj: TJSONObject; const ANome: string): TDateTime;
 
@@ -65,6 +68,22 @@ begin
     Result := TJSONNumber(LValor).AsDouble
   else
     Result := 0;
+end;
+
+function LerDouble(AObj: TJSONObject; const ANome: string): Double;
+var
+  LValor: TJSONValue;
+begin
+  LValor := Valor(AObj, ANome);
+  if LValor is TJSONNumber then
+    Result := TJSONNumber(LValor).AsDouble
+  else
+    Result := 0;
+end;
+
+function LerBooleano(AObj: TJSONObject; const ANome: string): Boolean;
+begin
+  Result := Valor(AObj, ANome) is TJSONTrue;
 end;
 
 function LerDataHora(AObj: TJSONObject; const ANome: string): TDateTime;
