@@ -1,4 +1,4 @@
-unit Model.Produto;
+﻿unit Model.Produto;
 
 interface
 
@@ -9,6 +9,7 @@ type
     Descricao: string;
     Preco: Currency;
     Estoque: Integer;
+    CodigoBarras: string; // vazio = sem código
   end;
 
 implementation

@@ -38,6 +38,7 @@ begin
   Result.Descricao := LerTexto(AJson, 'descricao');
   Result.Preco := LerCurrency(AJson, 'preco');
   Result.Estoque := LerInteiro(AJson, 'estoque');
+  Result.CodigoBarras := LerTexto(AJson, 'codigoBarras');
 end;
 
 function ProdutoDoTexto(const AJson: string): TProduto;
@@ -60,7 +61,9 @@ begin
   try
     LJson.AddPair('descricao', AProduto.Descricao)
       .AddPair('preco', NumeroJson(AProduto.Preco))
-      .AddPair('estoque', TJSONNumber.Create(AProduto.Estoque));
+      .AddPair('estoque', TJSONNumber.Create(AProduto.Estoque))
+      // sempre vai: a API grava o que vier, e sem o campo o PUT apagaria o código
+      .AddPair('codigoBarras', Trim(AProduto.CodigoBarras));
     Result := LJson.ToJSON;
   finally
     LJson.Free;

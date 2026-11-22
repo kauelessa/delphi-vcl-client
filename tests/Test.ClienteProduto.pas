@@ -41,6 +41,12 @@ type
     [Test]
     procedure Produto_Listar_ConvertePrecoEEstoque;
     [Test]
+    procedure Produto_Obter_LeCodigoBarras;
+    [Test]
+    procedure Produto_Atualizar_EnviaCodigoBarras;
+    [Test]
+    procedure Produto_Criar_SemCodigo_EnviaVazio;
+    [Test]
     procedure Service_ClienteSemNome_NaoChamaApi;
     [Test]
     procedure Service_ClienteSemDocumento_LevantaValidacao;
@@ -196,7 +202,7 @@ begin
     LProduto.Preco := 279.90;
     LProduto.Estoque := 25;
     FProdutos.Criar(LProduto).Free;
-    Assert.AreEqual('{"descricao":"Headset gamer USB","preco":279.9,"estoque":25}', FHttp.Chamadas[0].Corpo);
+    Assert.AreEqual('{"descricao":"Headset gamer USB","preco":279.9,"estoque":25,"codigoBarras":""}', FHttp.Chamadas[0].Corpo);
   finally
     LProduto.Free;
   end;
@@ -216,6 +222,56 @@ begin
     Assert.AreEqual(15, LPagina.Dados[0].Estoque);
   finally
     LPagina.Free;
+  end;
+end;
+
+procedure TTestClienteProduto.Produto_Obter_LeCodigoBarras;
+var
+  LProduto: TProduto;
+begin
+  FHttp.Enfileirar(200, '{"id":1,"descricao":"Teclado","preco":10,"estoque":1,"codigoBarras":"7891000000014"}');
+  LProduto := FProdutos.Obter(1);
+  try
+    Assert.AreEqual('7891000000014', LProduto.CodigoBarras);
+  finally
+    LProduto.Free;
+  end;
+end;
+
+procedure TTestClienteProduto.Produto_Atualizar_EnviaCodigoBarras;
+var
+  LProduto: TProduto;
+begin
+  // a API grava o que vier: sem o campo no PUT, editar o produto apagaria o código
+  FHttp.Enfileirar(200, '{"id":1,"descricao":"Teclado","preco":10,"estoque":1,"codigoBarras":"7891000000014"}');
+  LProduto := TProduto.Create;
+  try
+    LProduto.Id := 1;
+    LProduto.Descricao := 'Teclado';
+    LProduto.Preco := 10;
+    LProduto.Estoque := 1;
+    LProduto.CodigoBarras := ' 7891000000014 ';
+    FProdutos.Atualizar(LProduto).Free;
+    Assert.Contains(FHttp.Chamadas[0].Corpo, '"codigoBarras":"7891000000014"');
+  finally
+    LProduto.Free;
+  end;
+end;
+
+procedure TTestClienteProduto.Produto_Criar_SemCodigo_EnviaVazio;
+var
+  LProduto: TProduto;
+begin
+  FHttp.Enfileirar(201, '{"id":9,"descricao":"Mouse","preco":10,"estoque":1,"codigoBarras":""}');
+  LProduto := TProduto.Create;
+  try
+    LProduto.Descricao := 'Mouse';
+    LProduto.Preco := 10;
+    LProduto.Estoque := 1;
+    FProdutos.Criar(LProduto).Free;
+    Assert.Contains(FHttp.Chamadas[0].Corpo, '"codigoBarras":""');
+  finally
+    LProduto.Free;
   end;
 end;
 

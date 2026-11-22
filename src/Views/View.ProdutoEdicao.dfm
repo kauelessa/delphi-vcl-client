@@ -3,7 +3,7 @@ object frmProdutoEdicao: TfrmProdutoEdicao
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Produto'
-  ClientHeight = 348
+  ClientHeight = 406
   ClientWidth = 460
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmProdutoEdicao: TfrmProdutoEdicao
     Left = 16
     Top = 16
     Width = 428
-    Height = 316
+    Height = 374
     Color = clWhite
     TabOrder = 0
     object lblTitulo: TcxLabel
@@ -68,9 +68,22 @@ object frmProdutoEdicao: TfrmProdutoEdicao
       TabOrder = 2
       Width = 120
     end
-    object lblDicaEstoque: TcxLabel
+    object lblCodigoBarras: TcxLabel
       Left = 24
       Top = 178
+      Caption = 'C'#243'digo de barras'
+      Transparent = True
+    end
+    object edtCodigoBarras: TcxTextEdit
+      Left = 24
+      Top = 200
+      Properties.MaxLength = 14
+      TabOrder = 3
+      Width = 200
+    end
+    object lblDicaEstoque: TcxLabel
+      Left = 24
+      Top = 236
       AutoSize = False
       Caption = 'O estoque informado aqui substitui o atual. Pedidos baixam e cancelamentos devolvem automaticamente.'
       Properties.WordWrap = True
@@ -80,22 +93,22 @@ object frmProdutoEdicao: TfrmProdutoEdicao
     end
     object btnCancelar: TcxButton
       Left = 24
-      Top = 258
+      Top = 316
       Width = 110
       Height = 38
       Cancel = True
       Caption = 'Cancelar'
       ModalResult = 2
-      TabOrder = 4
+      TabOrder = 5
     end
     object btnSalvar: TcxButton
       Left = 244
-      Top = 258
+      Top = 316
       Width = 160
       Height = 38
       Caption = 'Salvar'
       Default = True
-      TabOrder = 3
+      TabOrder = 4
       OnClick = btnSalvarClick
     end
   end

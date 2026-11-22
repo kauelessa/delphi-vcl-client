@@ -18,6 +18,8 @@ type
     edtPreco: TcxCurrencyEdit;
     lblEstoque: TcxLabel;
     edtEstoque: TcxSpinEdit;
+    lblCodigoBarras: TcxLabel;
+    edtCodigoBarras: TcxTextEdit;
     lblDicaEstoque: TcxLabel;
     btnCancelar: TcxButton;
     btnSalvar: TcxButton;
@@ -91,6 +93,7 @@ begin
         edtDescricao.Text := LProduto.Descricao;
         edtPreco.Value := LProduto.Preco;
         edtEstoque.Value := LProduto.Estoque;
+        edtCodigoBarras.Text := LProduto.CodigoBarras;
         edtDescricao.SetFocus;
       finally
         LProduto.Free;
@@ -131,6 +134,7 @@ begin
   LProduto.Descricao := edtDescricao.Text;
   LProduto.Preco := edtPreco.Value;
   LProduto.Estoque := edtEstoque.Value;
+  LProduto.CodigoBarras := edtCodigoBarras.Text;
   DefinirOcupado(True);
   ExecutarAsync(
     procedure
