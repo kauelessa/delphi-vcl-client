@@ -50,7 +50,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Infra.Async, Infra.Excecoes, View.Estilo, View.Relogin, View.ListaBase, View.Clientes, View.Produtos;
+  Infra.Async, Infra.Excecoes, View.Estilo, View.Relogin, View.ListaBase, View.Clientes, View.Produtos, View.Pedidos;
 
 const
   PAINEL_SESSAO = 0;
@@ -111,7 +111,7 @@ begin
     TAba.Clientes: AbrirTela(TfraClientes);
     TAba.Produtos: AbrirTela(TfraProdutos);
   else
-    AbrirTela(nil); // pedidos entram na próxima etapa
+    AbrirTela(TfraPedidos);
   end;
 end;
 

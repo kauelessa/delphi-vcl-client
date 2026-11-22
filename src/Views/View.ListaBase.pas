@@ -75,6 +75,8 @@ type
     function MensagemInativar(const ADescricao: string): string; virtual; abstract;
     /// Telas sem busca de texto (pedidos) devolvem False e a caixa de busca some.
     function TemBusca: Boolean; virtual;
+    /// Pedidos só deixam cancelar os ABERTOS; clientes e produtos sempre podem inativar.
+    function PodeInativarSelecionado: Boolean; virtual;
     /// Executa AAcao fora da thread principal com a tela "ocupada"; ASucesso só roda se a
     /// tela ainda existir; ALimpeza roda sempre (para liberar o que a ação criou).
     procedure Executar(const AAcao, ASucesso: TProc; const ALimpeza: TProc = nil);
@@ -152,6 +154,11 @@ begin
   Result := True;
 end;
 
+function TfraListaBase.PodeInativarSelecionado: Boolean;
+begin
+  Result := True;
+end;
+
 function TfraListaBase.AdicionarColuna(const ANome, ATitulo: string; ALargura: Integer;
   const ATipo: string): TcxGridColumn;
 begin
@@ -208,7 +215,7 @@ begin
   btnProxima.Enabled := not AOcupado and (FPagina < FTotalPaginas);
   cbPorPagina.Enabled := not AOcupado;
   btnEditar.Enabled := not AOcupado and (IdSelecionado > 0);
-  btnInativar.Enabled := btnEditar.Enabled;
+  btnInativar.Enabled := btnEditar.Enabled and PodeInativarSelecionado;
 end;
 
 procedure TfraListaBase.Executar(const AAcao, ASucesso, ALimpeza: TProc);

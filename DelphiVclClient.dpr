@@ -42,7 +42,12 @@ uses
   View.Clientes in 'src\Views\View.Clientes.pas',
   View.Produtos in 'src\Views\View.Produtos.pas',
   View.ClienteEdicao in 'src\Views\View.ClienteEdicao.pas' {frmClienteEdicao},
-  View.ProdutoEdicao in 'src\Views\View.ProdutoEdicao.pas' {frmProdutoEdicao};
+  View.ProdutoEdicao in 'src\Views\View.ProdutoEdicao.pas' {frmProdutoEdicao},
+  Controller.Pedido in 'src\Controllers\Controller.Pedido.pas',
+  View.Seletor in 'src\Views\View.Seletor.pas' {frmSeletor},
+  View.Pedidos in 'src\Views\View.Pedidos.pas',
+  View.PedidoDetalhe in 'src\Views\View.PedidoDetalhe.pas' {frmPedidoDetalhe},
+  View.PedidoNovo in 'src\Views\View.PedidoNovo.pas' {frmPedidoNovo};
 
 {$R *.res}
 

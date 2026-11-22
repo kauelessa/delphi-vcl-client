@@ -122,7 +122,8 @@ end;
 
 function TPedidoApi.Cancelar(AId: Integer): TPedido;
 begin
-  Result := PedidoDoTexto(Enviar(THttpMetodo.Patch, '/pedidos/' + AId.ToString + '/cancelar'));
+  // corpo "{}" porque o middleware JSON da API recusa PATCH com corpo vazio (400)
+  Result := PedidoDoTexto(Enviar(THttpMetodo.Patch, '/pedidos/' + AId.ToString + '/cancelar', '{}'));
 end;
 
 end.

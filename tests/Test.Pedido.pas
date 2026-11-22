@@ -60,6 +60,8 @@ type
     procedure Listar_FiltroPorCliente_VaiNaUrl;
     [Test]
     procedure Cancelar_UsaPatch;
+    [Test]
+    procedure Cancelar_EnviaCorpoJsonVazio;
   end;
 
 implementation
@@ -295,6 +297,14 @@ begin
   finally
     LPedido.Free;
   end;
+end;
+
+procedure TTestPedido.Cancelar_EnviaCorpoJsonVazio;
+begin
+  // o middleware JSON da API (Jhonson) recusa PATCH sem corpo com 400 "Corpo da requisição vazio"
+  FHttp.Enfileirar(200, PEDIDO_JSON.Replace('"ABERTO"', '"CANCELADO"'));
+  FService.Cancelar(5).Free;
+  Assert.AreEqual('{}', FHttp.Chamadas[0].Corpo);
 end;
 
 initialization
