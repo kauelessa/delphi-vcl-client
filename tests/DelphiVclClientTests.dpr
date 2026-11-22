@@ -42,7 +42,9 @@ uses
   Api.Pedido in '..\src\Api\Api.Pedido.pas',
   Service.Rascunho in '..\src\Services\Service.Rascunho.pas',
   Service.Pedido in '..\src\Services\Service.Pedido.pas',
-  Test.Pedido in 'Test.Pedido.pas';
+  Test.Pedido in 'Test.Pedido.pas',
+  Infra.Async in '..\src\Infra\Infra.Async.pas',
+  Test.Async in 'Test.Async.pas';
 
 var
   LRunner: ITestRunner;
