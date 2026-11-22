@@ -80,7 +80,8 @@ begin
   case AResposta.Status of
     200..299:
       Exit;
-    400, 422:
+    // 409: regra de negócio contra o estado atual (ex.: pedido faturado não pode ser cancelado)
+    400, 409, 422:
       raise EApiValidacao.Create(MensagemDeErro(AResposta), AResposta.Status);
     401:
       raise EApiNaoAutorizado.Create(MensagemDeErro(AResposta), AResposta.Status);

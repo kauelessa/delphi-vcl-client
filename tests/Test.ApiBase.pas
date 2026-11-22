@@ -31,6 +31,9 @@ type
     procedure Verificar_422_ValidacaoComMensagemDaApi;
     [Test]
     procedure Verificar_400_Validacao;
+    // pedido faturado não pode ser cancelado: a API diz por quê (409), não é "erro inesperado"
+    [Test]
+    procedure Verificar_409_ValidacaoComMensagemDaApi;
     [Test]
     procedure Verificar_404_NaoEncontrado;
     [Test]
@@ -90,6 +93,13 @@ begin
   Assert.WillRaiseWithMessage(
     procedure begin TApiBase.VerificarResposta(Resposta(422, '{"erro":"Estoque insuficiente"}')) end,
     EApiValidacao, 'Estoque insuficiente');
+end;
+
+procedure TTestApiBase.Verificar_409_ValidacaoComMensagemDaApi;
+begin
+  Assert.WillRaiseWithMessage(
+    procedure begin TApiBase.VerificarResposta(Resposta(409, '{"erro":"Pedido faturado na NF-e 1287; cancele a nota primeiro."}')) end,
+    EApiValidacao, 'Pedido faturado na NF-e 1287; cancele a nota primeiro.');
 end;
 
 procedure TTestApiBase.Verificar_400_Validacao;

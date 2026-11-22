@@ -15,7 +15,7 @@ type
     property Status: Integer read FStatus;
   end;
 
-  EApiValidacao = class(EApi);      // 400 / 422
+  EApiValidacao = class(EApi);      // 400 / 409 / 422
   EApiNaoEncontrado = class(EApi);  // 404
   EApiNaoAutorizado = class(EApi);  // 401
   EApiIndisponivel = class(EApi);   // sem conexão, timeout, 5xx
