@@ -11,7 +11,7 @@ O cliente **não tem banco de dados**: os dados pertencem à API, que cria o pr�
 ## Ambiente
 
 - Delphi / RAD Studio 13 (Community Edition ou superior), VCL Win32. A compilação e o design de forms são feitos no RAD Studio; o Claude Code edita `.pas`, `.dpr`, `.dfm` e documentação pelo VS Code.
-- **Exceção autorizada pelo autor:** o Claude Code pode criar e editar `.dfm` neste projeto, validando cada form carregado em runtime antes de entregar. `.res` continua sem edição manual; se uma unit nova entrar no projeto, atualize o `uses` do `.dpr` e avise para conferir no RAD Studio.
+- O Claude Code pode criar e editar `.dfm` neste projeto, validando cada form carregado em runtime antes de entregar. Se uma unit nova entrar no projeto, registre-a no `uses` do `.dpr` e no `.dproj`.
 - Codificação: todo `.pas` e `.dpr` com caractere não ASCII deve ser salvo em **UTF-8 com BOM** (sem o BOM o compilador lê como ANSI e corrompe os acentos). Nos `.dfm`, caracteres não ASCII ficam como `#nnn` (`'Situa'#231#227'o'`), como o RAD Studio grava.
 - Para rodar, a API precisa estar no ar (por padrão em `http://localhost:9000`).
 
